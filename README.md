@@ -57,5 +57,9 @@ On Realme/ColorOS, also grant **Ignore battery optimisation**, or background tri
 ## Where things live
 
 Flows are one JSON file each in the app's private `files/flows/`. Nothing leaves the phone
-unless one of your own steps sends it somewhere. See `ARCHITECTURE.md` for the internals and
-`ROADMAP.md` for what is next.
+unless one of your own steps sends it somewhere.
+
+- `USAGE.md` - how to build flows, with three worked examples
+- `ARCHITECTURE.md` - internals
+- `PROJECT_STATE.md` - what is verified, what is not
+- `ROADMAP.md` - what is next
