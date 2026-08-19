@@ -78,4 +78,5 @@ C:\Users\Rishi\Cascade
   shots/            device screenshots from the 2026-08-19 verification pass
 ```
 
-Not a git repository yet.
+Git repository initialised 2026-08-19; single commit on `main`, authored as
+Rithik Krishna <317035893+Daemon-VI@users.noreply.github.com>. No remote yet.
