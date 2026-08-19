@@ -40,6 +40,35 @@ self-test flow on 2026-08-19.
   (cancelled deliberately rather than pinning uninvited).
 - **Settings** ✅ — live permission status per row, each explaining which action needs it.
 
+### v1.1 additions - "when an app opens" (2026-08-19 evening)
+
+Three new pieces, built for the "open Instagram, take a selfie, set it as wallpaper" ask:
+
+- **Take Photo** (`camera.photo`) - headless Camera2 stills, front or back, no preview. Adapted
+  from AegisToolkit's intruder-capture path.
+- **Set Wallpaper** (`dev.wallpaper`) - home, lock or both, with EXIF rotation applied.
+- **When an app opens** trigger - an `AccessibilityService` (`AppWatcherService`) that receives
+  nothing but window-state changes, fires only on a transition *into* the chosen package, and
+  holds a 20 s per-package cooldown.
+
+Verified: the flow ran from the app and did the whole chain - a 2.6 MB front-camera JPEG was
+written and the home wallpaper actually changed. ✅
+
+**Not verified: the trigger firing.** Two device-side blockers, neither of them code:
+1. ColorOS ignores `settings put secure enabled_accessibility_services` written over ADB -
+   `dumpsys accessibility` still reported `Bound services:{}`. The switch has to be flipped by
+   hand in Settings → Accessibility → Installed services. The Settings screen now reports this
+   honestly: it checks whether the service is actually *connected*, not whether the OS lists it
+   as enabled.
+2. Instagram sits behind ColorOS app lock on this phone, so launching it lands on
+   `AppUnlockPasswordActivity` rather than Instagram itself.
+
+Still genuinely open once accessibility is on: whether Android grants the **camera to a
+background-started foreground service**. `RunnerService` now declares
+`specialUse|camera|microphone` and claims the camera type only when the permission is held, which
+is the documented route, but Android 11+ while-in-use rules may still refuse it. If they do, the
+fallback is the home-screen-icon trigger, which runs as a real activity.
+
 ### Not yet exercised on device
 
 Background trigger *firing* (time / boot / charger / Wi-Fi / notification) is implemented and

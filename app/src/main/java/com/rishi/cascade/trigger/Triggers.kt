@@ -12,7 +12,9 @@ data class TriggerType(
     val description: String,
     val configLabel: String = "",
     val configHint: String = "",
-    val needs: String = ""      // "notification_listener", "exact_alarm", ""
+    val needs: String = "",
+    /** prefilled when the trigger is added; only where a sensible default exists */
+    val configDefault: String = ""      // "notification_listener", "exact_alarm", ""
 )
 
 object TriggerTypes {
@@ -23,9 +25,9 @@ object TriggerTypes {
         TriggerType("shortcut", "Home screen icon", "AddToHomeScreen",
             "Add an icon that runs this flow straight from the home screen."),
         TriggerType("time", "At a time of day", "Schedule",
-            "Runs every day at the time you pick.", "Time (HH:mm)", "07:30", "exact_alarm"),
+            "Runs every day at the time you pick.", "Time (HH:mm)", "07:30", "exact_alarm", "07:30"),
         TriggerType("interval", "Every so often", "Update",
-            "Runs on a repeating timer while the phone is awake.", "Minutes between runs", "30", "exact_alarm"),
+            "Runs on a repeating timer while the phone is awake.", "Minutes between runs", "30", "exact_alarm", "30"),
         TriggerType("boot", "When the phone starts", "RestartAlt",
             "Runs once after a reboot."),
         TriggerType("power_connected", "Charger plugged in", "BatteryChargingFull",
@@ -33,7 +35,7 @@ object TriggerTypes {
         TriggerType("power_disconnected", "Charger unplugged", "PowerOff",
             "Runs when power is disconnected."),
         TriggerType("battery_low", "Battery gets low", "Battery2Bar",
-            "Runs when the battery drops below a level you choose.", "Percentage", "20"),
+            "Runs when the battery drops below a level you choose.", "Percentage", "20", "", "20"),
         TriggerType("headset_plug", "Headphones connected", "Headphones",
             "Runs when wired headphones go in."),
         TriggerType("headset_unplug", "Headphones removed", "HeadsetOff",
@@ -48,6 +50,9 @@ object TriggerTypes {
             "Runs when Wi-Fi connects. Leave the name blank for any network.", "Network name", "Home Wi-Fi"),
         TriggerType("wifi_disconnected", "Leaves Wi-Fi", "WifiOff",
             "Runs when Wi-Fi drops."),
+        TriggerType("app_opened", "When an app opens", "Launch",
+            "Runs the moment you bring a chosen app to the foreground. The app lands in {{app}} and {{package}}.",
+            "App", "com.instagram.android", "accessibility"),
         TriggerType("notification", "A notification arrives", "Notifications",
             "Runs when a notification appears. The text lands in {{title}}, {{text}} and {{app}}.",
             "Only from this app (package or blank)", "com.whatsapp", "notification_listener"),
@@ -84,6 +89,8 @@ object TriggerEngine {
                         (extras["title"].orEmpty() + " " + extras["text"].orEmpty()).contains(textFilter, true)
                 pkgOk && textOk
             }
+            "app_opened" -> filter.isEmpty() ||
+                    extras["package"].orEmpty().equals(filter, ignoreCase = true)
             "battery_low" -> {
                 val threshold = filter.toDoubleOrNull() ?: 20.0
                 (extras["level"]?.toDoubleOrNull() ?: 0.0) <= threshold

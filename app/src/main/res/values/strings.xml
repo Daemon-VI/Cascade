@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Cascade</string>
+    <string name="accessibility_description">Lets Cascade notice which app you just opened, so flows with the \"when an app opens\" trigger can run. Cascade does not read screen content.</string>
 </resources>

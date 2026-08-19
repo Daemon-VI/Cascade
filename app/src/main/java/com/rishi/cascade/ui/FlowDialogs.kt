@@ -54,7 +54,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.rishi.cascade.R
 import com.rishi.cascade.model.Flow
+import com.rishi.cascade.model.ParamSpec
+import com.rishi.cascade.model.ParamType
 import com.rishi.cascade.model.Trigger
+import com.rishi.cascade.trigger.AppWatcherService
 import com.rishi.cascade.trigger.NotificationWatcher
 import com.rishi.cascade.trigger.RunFlowActivity
 import com.rishi.cascade.trigger.Scheduler
@@ -99,8 +102,8 @@ fun TriggerDialog(flow: Flow, onClose: () -> Unit) {
                                     Modifier.fillMaxWidth()
                                         .clickable {
                                             val t = Trigger(type = type.id)
-                                            type.configHint.takeIf { it.isNotEmpty() }
-                                                ?.let { t.config["value"] = it }
+                                            type.configDefault.takeIf { it.isNotEmpty() }
+                                                ?.let { d -> t.config["value"] = d }
                                             flow.triggers.add(t)
                                             adding = false
                                             version++
@@ -173,7 +176,14 @@ private fun TriggerRow(
             }
         }
 
-        if (type != null && type.configLabel.isNotEmpty()) {
+        if (t.type == "app_opened") {
+            // an app picker beats making the user find a package name by hand
+            ParamField(
+                spec = ParamSpec("value", "App", ParamType.APP, ""),
+                value = value,
+                variables = emptyList()
+            ) { value = it; t.config["value"] = it; onChanged() }
+        } else if (type != null && type.configLabel.isNotEmpty()) {
             OutlinedTextField(
                 value = value,
                 onValueChange = { value = it; t.config["value"] = it; onChanged() },
@@ -204,6 +214,13 @@ private fun TriggerRow(
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            type?.needs == "accessibility" && !AppWatcherService.isEnabled(context) ->
+                TextButton(onClick = {
+                    context.startActivity(
+                        Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    )
+                }) { Text("Turn on Cascade in Accessibility") }
             type?.needs == "notification_listener" && !NotificationWatcher.isEnabled(context) ->
                 TextButton(onClick = {
                     context.startActivity(

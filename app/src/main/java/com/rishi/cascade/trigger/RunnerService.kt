@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
@@ -53,12 +54,24 @@ class RunnerService : Service() {
             .setOngoing(true)
             .build()
         try {
-            if (Build.VERSION.SDK_INT >= 34)
-                startForeground(NOTIF_ID, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+            if (Build.VERSION.SDK_INT >= 34) startForeground(NOTIF_ID, n, serviceTypes())
             else startForeground(NOTIF_ID, n)
         } catch (e: Exception) {
             // Some OEM builds refuse a foreground start from the background; the work still runs.
+            try { startForeground(NOTIF_ID, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE) }
+            catch (e2: Exception) { }
         }
+    }
+
+    /** Camera and microphone are only claimed when their permission is actually held - declaring
+     *  a type without its permission makes startForeground throw. */
+    private fun serviceTypes(): Int {
+        var types = ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+        if (checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+            types = types or ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
+        if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
+            types = types or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
+        return types
     }
 
     private suspend fun runFlow(flowId: String, extras: Map<String, String>) {

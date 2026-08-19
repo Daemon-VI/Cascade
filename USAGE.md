@@ -95,6 +95,7 @@ to bisect a flow that misbehaves.
 | Screen on/off, unlocked | App process alive (grant notification access to keep it up) |
 | Joins a Wi-Fi network | Location permission to read the network name |
 | A notification arrives | Notification access |
+| When an app opens | Accessibility (ColorOS: Settings → Accessibility → **Installed services**) |
 
 Three things about background runs that will bite you otherwise:
 
@@ -169,3 +170,22 @@ Two escape hatches, for when there is no dedicated action:
 
 Between those two, plus **HTTP Request** and **Run Shell Command**, there is very little on the
 phone you cannot reach.
+
+# Worked example 4 — selfie wallpaper when you open Instagram
+
+The classic shame-automation, and a tour of the newest pieces.
+
+1. **Take Photo** — Camera: **Front**, Save as `selfie.jpg`. Save result as `shot`.
+2. **Set Wallpaper** — Image file `{{shot}}`, Apply to **Home screen**.
+3. **Post Notification** — Title `Say cheese`, Message `You opened Instagram. That is your wallpaper now.`
+
+Then ⋮ → Triggers → **When an app opens** → pick Instagram in the app picker.
+
+Two caveats worth knowing before you rely on it:
+
+- The trigger needs the accessibility switch turned on **by hand** — ADB cannot do it and neither
+  can the app. Until the service is actually bound, the Settings row stays red.
+- Android restricts the camera for apps that are not in the foreground. Cascade's runner declares
+  a camera foreground service, which is the documented way to be allowed, but an OEM build may
+  still refuse. If the notification says the camera produced nothing, run the flow from a home
+  screen icon instead — that path runs as a real activity and always has camera rights.

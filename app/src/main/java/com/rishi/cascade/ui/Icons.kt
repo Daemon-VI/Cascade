@@ -117,6 +117,8 @@ fun iconFor(name: String): ImageVector = when (name) {
     "PlayArrow" -> Icons.Filled.PlayArrow
     "MusicNote" -> Icons.Filled.MusicNote
     "Mic" -> Icons.Filled.Mic
+    "Wallpaper" -> Icons.Filled.Wallpaper
+    "Launch" -> Icons.Filled.Launch
 
     // location, comms, scripting
     "MyLocation" -> Icons.Filled.MyLocation

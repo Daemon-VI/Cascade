@@ -35,6 +35,7 @@ object Registry {
         registerAll(NetActions.all())
         registerAll(FileActions.all())
         registerAll(MediaActions.all())
+        registerAll(CameraActions.all())
         registerAll(LocationActions.all())
         registerAll(CommsActions.all())
         registerAll(ScriptActions.all())

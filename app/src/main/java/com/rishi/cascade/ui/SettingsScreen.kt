@@ -59,6 +59,7 @@ import com.rishi.cascade.actions.Registry
 import com.rishi.cascade.store.FlowStore
 import com.rishi.cascade.store.Templates
 import com.rishi.cascade.trigger.History
+import com.rishi.cascade.trigger.AppWatcherService
 import com.rishi.cascade.trigger.NotificationWatcher
 import com.rishi.cascade.trigger.Scheduler
 
@@ -108,6 +109,7 @@ fun SettingsScreen(onBack: () -> Unit) {
     val runtimePerms = listOf(
         android.Manifest.permission.ACCESS_FINE_LOCATION,
         android.Manifest.permission.RECORD_AUDIO,
+        android.Manifest.permission.CAMERA,
         android.Manifest.permission.READ_CONTACTS,
         android.Manifest.permission.SEND_SMS,
         android.Manifest.permission.CALL_PHONE
@@ -127,6 +129,10 @@ fun SettingsScreen(onBack: () -> Unit) {
                 "Record Audio.",
                 hasPerm(context, android.Manifest.permission.RECORD_AUDIO)
             ) { permLauncher.launch(runtimePerms.toTypedArray()) },
+            Access("Camera",
+                "Take Photo. Android only allows this while Cascade is on screen or running as a foreground service.",
+                hasPerm(context, android.Manifest.permission.CAMERA)
+            ) { permLauncher.launch(runtimePerms.toTypedArray()) },
             Access("Contacts, SMS and phone",
                 "Find Contact, sending a text silently and dialling directly.",
                 hasPerm(context, android.Manifest.permission.READ_CONTACTS)
@@ -143,6 +149,13 @@ fun SettingsScreen(onBack: () -> Unit) {
                 "The \"a notification arrives\" trigger and Now Playing.",
                 NotificationWatcher.isEnabled(context)
             ) { openSettings(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS) },
+            Access("Accessibility",
+                "The \"when an app opens\" trigger. On ColorOS look under Installed services. " +
+                        "Cascade only receives which app came to the front - it cannot read screen content.",
+                // the switch being listed as on is not enough: ColorOS can leave it unbound,
+                // so trust only an actually connected service
+                AppWatcherService.connected
+            ) { openSettings(Settings.ACTION_ACCESSIBILITY_SETTINGS) },
             Access("Usage access",
                 "The Current App action.",
                 usageAccess(context)
