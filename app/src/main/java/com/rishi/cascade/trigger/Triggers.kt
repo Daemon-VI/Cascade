@@ -51,7 +51,8 @@ object TriggerTypes {
         TriggerType("wifi_disconnected", "Leaves Wi-Fi", "WifiOff",
             "Runs when Wi-Fi drops."),
         TriggerType("app_opened", "When an app opens", "Launch",
-            "Runs the moment you bring a chosen app to the foreground. The app lands in {{app}} and {{package}}.",
+            "Runs when you bring a chosen app to the front. Needs Accessibility, or Usage access if " +
+                    "your phone refuses accessibility. The app lands in {{app}} and {{package}}.",
             "App", "com.instagram.android", "accessibility"),
         TriggerType("notification", "A notification arrives", "Notifications",
             "Runs when a notification appears. The text lands in {{title}}, {{text}} and {{app}}.",

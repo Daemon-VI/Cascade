@@ -95,6 +95,16 @@
                 android:value="false" />
         </service>
 
+        <!-- Fallback backend for the app-open trigger where accessibility is not allowed. -->
+        <service
+            android:name=".trigger.AppWatchService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FOREGROUND_SERVICE_SUBTYPE"
+                android:value="Notices when a chosen app is opened so a flow can run" />
+        </service>
+
         <!-- Watches which app comes to the foreground, for the "when an app opens" trigger. -->
         <service
             android:name=".trigger.AppWatcherService"

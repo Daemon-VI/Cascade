@@ -157,7 +157,8 @@ fun SettingsScreen(onBack: () -> Unit) {
                 AppWatcherService.connected
             ) { openSettings(Settings.ACTION_ACCESSIBILITY_SETTINGS) },
             Access("Usage access",
-                "The Current App action.",
+                "The Current App action, and the \"when an app opens\" trigger when accessibility " +
+                        "is unavailable - which is the case on most Realme and Xiaomi builds.",
                 usageAccess(context)
             ) { openSettings(Settings.ACTION_USAGE_ACCESS_SETTINGS) },
             Access("Exact alarms",

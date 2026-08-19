@@ -95,7 +95,7 @@ to bisect a flow that misbehaves.
 | Screen on/off, unlocked | App process alive (grant notification access to keep it up) |
 | Joins a Wi-Fi network | Location permission to read the network name |
 | A notification arrives | Notification access |
-| When an app opens | Accessibility (ColorOS: Settings → Accessibility → **Installed services**) |
+| When an app opens | Accessibility, **or** Usage access (see below) |
 
 Three things about background runs that will bite you otherwise:
 
@@ -183,9 +183,12 @@ Then ⋮ → Triggers → **When an app opens** → pick Instagram in the app pi
 
 Two caveats worth knowing before you rely on it:
 
-- The trigger needs the accessibility switch turned on **by hand** — ADB cannot do it and neither
-  can the app. Until the service is actually bound, the Settings row stays red.
-- Android restricts the camera for apps that are not in the foreground. Cascade's runner declares
-  a camera foreground service, which is the documented way to be allowed, but an OEM build may
-  still refuse. If the notification says the camera produced nothing, run the flow from a home
-  screen icon instead — that path runs as a real activity and always has camera rights.
+- **On Realme/ColorOS the accessibility route is simply unavailable** to a sideloaded app — the
+  switch appears to turn on and silently does not. Grant **Usage access** instead: Cascade falls
+  back to watching the usage event stream, which works just as well with about a second of lag.
+  You will see a quiet "Watching for app triggers" notification while a flow wants it; that is the
+  service being allowed to stay alive, and it stops as soon as no flow needs it.
+- Both routes are checked automatically. If accessibility ever does bind, it takes over and the
+  poller shuts down.
+- The camera does work from a background run on this phone — verified. If a future Android build
+  refuses it, run the flow from a home screen icon instead, which runs as a real activity.

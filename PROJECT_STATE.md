@@ -54,7 +54,27 @@ Three new pieces, built for the "open Instagram, take a selfie, set it as wallpa
 Verified: the flow ran from the app and did the whole chain - a 2.6 MB front-camera JPEG was
 written and the home wallpaper actually changed. ✅
 
-**Not verified: the trigger firing.** Two device-side blockers, neither of them code:
+**The trigger now fires — verified end to end on 2026-08-19 at 21:00.** Opening a watched app
+produced a fresh front-camera JPEG and a changed wallpaper, entirely in the background, with
+`history.log` recording `ok  Instagram selfie  3 steps`. Two findings got it there:
+
+- **ColorOS will not let a sideloaded app hold an accessibility service.** The toggle silently
+  fails: `appops` showed `ACCESS_RESTRICTED_SETTINGS: rejectTime=+3m40s ago` and
+  `dumpsys accessibility` kept reporting `Bound services:{}`. App info has no "Allow restricted
+  settings" entry on this build, and `appops set` is blocked from ADB (no MANAGE_APP_OPS_MODES),
+  exactly like `pm grant`. This is not fixable from the app side.
+- So the trigger gained a **second backend**: `AppWatchService` polls `UsageStatsManager`
+  event stream every 1.5 s while the screen is on, behind a minimum-importance notification, and
+  only runs when a flow actually wants it and accessibility is not already doing the job.
+  Usage access is *not* subject to the restricted-setting block, so it can be granted normally.
+- **Camera from a background-started foreground service is allowed here.** This was the open
+  question; `RunnerService` declaring `camera` in its foreground-service type and claiming it only
+  when the permission is held turned out to be enough on Android 15 / ColorOS.
+
+Testing note: Instagram itself sits behind ColorOS app lock, so the automated test used YouTube as
+the watched package and was then set back. The package is only a filter - the mechanism is identical.
+
+**Earlier blockers, now resolved:**
 1. ColorOS ignores `settings put secure enabled_accessibility_services` written over ADB -
    `dumpsys accessibility` still reported `Bound services:{}`. The switch has to be flipped by
    hand in Settings → Accessibility → Installed services. The Settings screen now reports this

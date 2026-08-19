@@ -75,10 +75,12 @@ object Scheduler {
         c.getSystemService(AlarmManager::class.java)?.cancel(pending(c, flowId, triggerId))
     }
 
-    /** Re-arms every time-based trigger. Called at boot, after edits and after each firing. */
+    /** Re-arms every time-based trigger. Called at boot, after edits and after each firing.
+     *  Also brings the app-open watcher up or down, since that depends on the same edits. */
     fun rescheduleAll(c: Context) {
         val store = FlowStore.get(c)
         store.reload()
+        AppWatchService.sync(c)
         store.all().forEach { flow ->
             flow.triggers.forEach { t ->
                 if (t.type == "time" || t.type == "interval") {
