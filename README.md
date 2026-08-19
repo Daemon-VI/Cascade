@@ -10,9 +10,9 @@ beyond AndroidX/Compose.
 
 ## What it does
 
-- **115 actions** across 14 categories — control flow, interaction, text, maths, dates, data,
+- **154 actions** across 14 categories — control flow, interaction, text, maths, dates, data,
   device, apps and intents, network, files, media, location, communication, scripting.
-- **17 trigger types** — Quick Settings tile, home-screen icon, time of day, interval, boot,
+- **18 trigger types** — Quick Settings tile, home-screen icon, time of day, interval, boot,
   charger in/out, low battery, headphones, screen on/off, unlock, Wi-Fi join/leave, notification
   arrival, airplane mode.
 - **Real drag and drop** — long-press a step to move it (whole `If` / loop blocks travel with
@@ -33,7 +33,8 @@ beyond AndroidX/Compose.
 | **Run JavaScript** | Arbitrary JS with every flow variable in scope, returning a value into the flow. |
 | **Run Shell Command** | `sh -c` as the app user (no root) — `getprop`, `settings get`, `ping`, `pm list`. |
 | **HTTP Request** | Any method, headers, query, JSON/form/raw bodies, JSON auto-parsed into a navigable value. |
-| **Triggers** | Notification arrival, Wi-Fi SSID, screen state and boot are ordinary triggers here. |
+| **Triggers** | Notification arrival, Wi-Fi SSID, screen state, boot and *app launch* are ordinary triggers here. |
+| **Reach** | Raw TCP/UDP sockets, wake-on-LAN, HMAC signing, zip archives, sensors, silent camera, wallpaper, ringtone and the settings tables - all without root. |
 
 ## Building
 

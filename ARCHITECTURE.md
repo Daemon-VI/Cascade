@@ -9,7 +9,7 @@ platform `WebView` as the JavaScript engine.
 ```
 model/     what a flow is
 engine/    how a flow runs
-actions/   what a flow can do          (115 actions)
+actions/   what a flow can do          (154 actions)
 store/     where flows live            (+ starter templates)
 trigger/   what makes a flow run       (services, receivers, alarms)
 ui/        how a flow is built         (Compose, drag and drop)
@@ -70,6 +70,10 @@ prompts into notifications, and refuses to guess an answer unless the step has a
 Each action is an `ActionDef` plus a `suspend (Env) -> Any?` body, registered in `Registry`.
 Adding an action is one entry in one list; the editor, palette, search and variable picker all
 derive from `ActionDef` automatically.
+
+The `Extra*.kt` files hold the second wave of actions; they are grouped by domain rather than by
+category, because a single theme (say zip plus share plus gallery) reads better together than split
+across four files.
 
 Control-flow actions are declared here for the editor but never executed — `Engine` intercepts
 them by id before generic dispatch.

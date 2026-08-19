@@ -39,6 +39,10 @@ object Registry {
         registerAll(LocationActions.all())
         registerAll(CommsActions.all())
         registerAll(ScriptActions.all())
+        registerAll(ExtraTextData.all())
+        registerAll(ExtraDevice.all())
+        registerAll(ExtraFilesNet.all())
+        registerAll(ExtraComms.all())
     }
 
     private fun registerAll(list: List<Action>) = list.forEach { byId[it.def.id] = it }

@@ -14,7 +14,7 @@ in `app/build.gradle.kts` breaks the build.**
 
 ## Status: v1.0 — built, installed and verified on device
 
-115 actions across 14 categories, 17 trigger types. Verified by ADB screenshots and an injected
+154 actions across 14 categories, 18 trigger types. Verified by ADB screenshots and an injected
 self-test flow on 2026-08-19.
 
 ### Verified on the phone
@@ -107,6 +107,31 @@ gated behind permissions that were not granted during testing.
 3. Palette listed `End If` / `Otherwise` / `End Repeat` as if they were addable on their own.
 4. Collapsed step summaries went stale after editing a param (params are plain maps, not snapshot
    state) — fixed with a revision counter.
+
+### v1.2 - catalogue expansion (2026-08-19)
+
+37 actions added to close gaps, taking the library from 117 to **154**. Verified in one run on
+device, each returning a correct value (HMAC-SHA256 matched Python byte for byte, the light sensor
+read 35.6 lux, the carrier came back as JIO):
+
+- **Text**: Extract from Text (emails, links, OTP codes, hashtags, currency), Sort Lines,
+  Strip HTML.
+- **Maths and dates**: Percentage, Convert Number Base, Format Duration, Is Time Between (handles
+  windows crossing midnight), Wait Until Time.
+- **Data**: Parse CSV, Number Range, Set Dictionary Value, Merge Dictionaries, Sort List by Field,
+  Sign with HMAC, Decode JWT.
+- **Device**: Read Sensor (light, proximity, pressure, humidity, acceleration, steps), Mobile
+  Network Info, Screen Orientation, Keep Screen Awake, Lock the Screen (device admin), Read System
+  Setting.
+- **Apps**: Close Background App, App Permissions.
+- **Files**: Create Zip, Extract Zip, Hash a File, Find Files, Share a File (via FileProvider).
+- **Media**: Save to Gallery, Edit Image (resize/rotate/flip/grayscale/compress), Set Ringtone.
+- **Network**: Upload File (multipart), Send to Socket (TCP/UDP), Wake a Computer (wake-on-LAN).
+- **Location**: Open Map.
+- **Comms**: Read Messages (including "latest code" for OTP flows), Recent Calls.
+
+New plumbing: a `FileProvider` so files can be shared out, and `LockAdmin`, a device-admin receiver
+that asks for `force-lock` and nothing else.
 
 ## Known rough edges
 

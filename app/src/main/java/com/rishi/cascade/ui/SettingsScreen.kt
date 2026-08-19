@@ -59,6 +59,7 @@ import com.rishi.cascade.actions.Registry
 import com.rishi.cascade.store.FlowStore
 import com.rishi.cascade.store.Templates
 import com.rishi.cascade.trigger.History
+import com.rishi.cascade.trigger.LockAdmin
 import com.rishi.cascade.trigger.AppWatcherService
 import com.rishi.cascade.trigger.NotificationWatcher
 import com.rishi.cascade.trigger.Scheduler
@@ -161,6 +162,14 @@ fun SettingsScreen(onBack: () -> Unit) {
                         "is unavailable - which is the case on most Realme and Xiaomi builds.",
                 usageAccess(context)
             ) { openSettings(Settings.ACTION_USAGE_ACCESS_SETTINGS) },
+            Access("Device admin",
+                "Only the Lock the Screen action. Cascade asks for force-lock and nothing else, " +
+                        "and you can revoke it on the same screen.",
+                LockAdmin.isActive(context)
+            ) {
+                if (LockAdmin.isActive(context)) LockAdmin.disable(context)
+                else context.startActivity(LockAdmin.enableIntent(context))
+            },
             Access("Exact alarms",
                 "Time triggers fire on the minute instead of whenever the system feels like it.",
                 Scheduler.canBeExact(context)
