@@ -1,0 +1,29 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- three blocks cascading down, joined by the flow line -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M30,30 h26 a6,6 0 0 1 6,6 v8 a6,6 0 0 1 -6,6 h-26 a6,6 0 0 1 -6,-6 v-8 a6,6 0 0 1 6,-6 z" />
+    <path
+        android:fillColor="#FFD9C8FF"
+        android:pathData="M41,58 h26 a6,6 0 0 1 6,6 v8 a6,6 0 0 1 -6,6 h-26 a6,6 0 0 1 -6,-6 v-8 a6,6 0 0 1 6,-6 z" />
+    <path
+        android:fillColor="#FFB79BFF"
+        android:pathData="M52,84 h22 a5,5 0 0 1 5,5 v0 a5,5 0 0 1 -5,5 h-22 a5,5 0 0 1 -5,-5 v0 a5,5 0 0 1 5,-5 z" />
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M33,50 v6 a4,4 0 0 0 4,4 h4" />
+    <path
+        android:strokeColor="#FFD9C8FF"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M44,78 v4 a4,4 0 0 0 4,4 h3" />
+</vector>
